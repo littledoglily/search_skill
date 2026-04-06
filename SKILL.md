@@ -2,7 +2,6 @@
 name: querit-web-search
 description: Search the web using Querit.ai API. Use this skill when the user wants to search the internet, look up recent news, find information about a topic, or get current results beyond the model's training data.
 metadata:
-  homepage: https://github.com/YOUR_USERNAME/querit-web-search-skill
   require-secret: true
   require-secret-description: "Enter your Querit.ai API key. Get a free key (1,000 requests/month, no credit card needed) at: https://www.querit.ai/en/dashboard/home"
 ---
