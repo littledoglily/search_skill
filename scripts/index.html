@@ -9,36 +9,31 @@ window.ai_edge_gallery_get_result = async function(params, secret) {
   const apiKey = secret || "";
 
   if (!apiKey) {
-    return JSON.stringify({ error_code: 401, error_msg: "No API key provided. Please set your Querit.ai API key in the skill secret field." });
+    return JSON.stringify({ error_code: 401, error_msg: "No API key provided." });
   }
-
   if (!query) {
-    return JSON.stringify({ error_code: 400, error_msg: "No search query provided." });
+    return JSON.stringify({ error_code: 400, error_msg: "No query provided." });
   }
 
   try {
     const response = await fetch("https://api.querit.ai/v1/search", {
       method: "POST",
+      mode: "cors",
       headers: {
         "Content-Type": "application/json",
         "Authorization": "Bearer " + apiKey
       },
-      body: JSON.stringify({
-        query: query,
-        count: count,
-        filters: {
-          sites: { include: [], exclude: [] },
-          timeRange: { date: "" },
-          geo: { countries: { include: [] } },
-          languages: { include: [] }
-        }
-      })
+      body: JSON.stringify({ query: query, count: count })
     });
+
+    if (!response.ok) {
+      return JSON.stringify({ error_code: response.status, error_msg: "HTTP error: " + response.status });
+    }
 
     const data = await response.json();
     return JSON.stringify(data);
   } catch (err) {
-    return JSON.stringify({ error_code: 500, error_msg: "Network error: " + err.message });
+    return JSON.stringify({ error_code: 500, error_msg: "Error: " + err.message + " (possible CORS issue)" });
   }
 };
 </script>
