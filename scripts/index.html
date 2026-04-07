@@ -5,12 +5,14 @@
 <script>
 window.ai_edge_gallery_get_result = async function(data, secret) {
   // Parse params - handle both string and object input
+  console.log("===== 收到的原始data =====", data);
   let params;
   try {
     params = typeof data === "string" ? JSON.parse(data) : data;
   } catch (e) {
     return JSON.stringify({ error_code: 400, error_msg: "Invalid JSON params: " + e.message });
   }
+  console.log("===== 解析后的参数 =====", JSON.stringify(params));
 
   const query = params.query || "";
   const count = params.count || 10;
