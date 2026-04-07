@@ -3,18 +3,27 @@
 <head><meta charset="utf-8"></head>
 <body>
 <script>
-window.ai_edge_gallery_get_result = async function(params, secret) {
+window.ai_edge_gallery_get_result = async function(data, secret) {
+  // Parse params - handle both string and object input
+  let params;
+  try {
+    params = typeof data === "string" ? JSON.parse(data) : data;
+  } catch (e) {
+    return JSON.stringify({ error_code: 400, error_msg: "Invalid JSON params: " + e.message });
+  }
+
   const query = params.query || "";
   const count = params.count || 10;
   const apiKey = secret || "";
 
   if (!apiKey) {
-    return JSON.stringify({ error_code: 401, error_msg: "No API key provided." });
+    return JSON.stringify({ error_code: 401, error_msg: "No API key provided. Please set your Querit.ai API key in the skill secret field." });
   }
   if (!query) {
     return JSON.stringify({ error_code: 400, error_msg: "No search query provided." });
   }
 
+  // Assemble nested filters structure from flat params
   const body = {
     query: query,
     count: count,
@@ -55,8 +64,8 @@ window.ai_edge_gallery_get_result = async function(params, secret) {
       });
     }
 
-    const data = await response.json();
-    return JSON.stringify(data);
+    const result = await response.json();
+    return JSON.stringify(result);
 
   } catch (err) {
     return JSON.stringify({
